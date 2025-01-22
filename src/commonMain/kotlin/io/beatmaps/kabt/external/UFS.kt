@@ -30,4 +30,3 @@ expect object UFS {
     fun getRefTypeTypeTree(handle: Long, className: String, namespaceName: String, assemblyName: String): Long
     fun getTypeTreeNodeInfo(handle: Long, node: Int): TypeTreeNodeInfoData
 }
-
