@@ -1,0 +1,6 @@
+compilerOpts = -Inative
+staticLibraries.mingw = UnityFileSystemApi.lib
+libraryPaths = native
+---
+
+#include "UnityFileSystemApi.h"
