@@ -74,7 +74,7 @@ kotlin {
 }
 
 application {
-    mainClass = "io.beatmaps.kabt.UFSKt"
+    mainClass = "io.beatmaps.kabt.MainKt"
     applicationDefaultJvmArgs += listOf(
         "-Djava.library.path=${projectDir}/build/native/"
     )
