@@ -14,7 +14,7 @@ expect object UFS {
     fun getArchiveNode(handle: Long, nodeIndex: Int): ArchiveNodeData
 
     fun openFile(path: String): Long
-    fun readFile(handle: Long, size: Long): ByteArray
+    fun readFile(handle: Long, size: Long): UByteArray
     fun seekFile(handle: Long, offset: Long, origin: SeekOrigin): Long
     fun getFileSize(handle: Long): Long
     fun closeFile(handle: Long)

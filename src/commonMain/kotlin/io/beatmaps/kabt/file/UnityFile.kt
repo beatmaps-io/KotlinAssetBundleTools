@@ -12,7 +12,7 @@ class UnityFile(private val handle: Long) : IUnityFile {
     override fun seek(offset: Long, origin: SeekOrigin) =
         UFS.seekFile(handle, offset, origin)
 
-    override fun read(size: Int, buffer: ByteArray): Long =
+    override fun read(size: Int, buffer: UByteArray): Long =
         UFS.readFile(handle, size.toLong()).also {
             it.copyInto(buffer)
         }.size.toLong()

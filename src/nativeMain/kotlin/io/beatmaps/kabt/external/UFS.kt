@@ -101,7 +101,7 @@ actual object UFS {
         if (long1.value > Int.MAX_VALUE)
             throw InvalidOperationException("Can't read files longer than max int bytes")
 
-        cBuffer.readBytes(long1.value.toInt())
+        cBuffer.readBytes(long1.value.toInt()).toUByteArray()
     }
 
     actual fun seekFile(handle: Long, offset: Long, origin: SeekOrigin): Long {

@@ -9,7 +9,7 @@ class UnityFileReader(private val ufs: UnityFileSystem, private val path: String
     private val file = UnityFile(UFS.openFile(path))
     override val length = file.size
 
-    private val buffer = ByteArray(bufferSize)
+    private val buffer = UByteArray(bufferSize)
     private var bufferStartInFile = 0L
     private var bufferEndInFile = 0L
 
@@ -24,40 +24,40 @@ class UnityFileReader(private val ufs: UnityFileSystem, private val path: String
 
     override fun readString(fileOffset: Long, size: Int) =
         readBytes(fileOffset, size).let { offset ->
-            buffer.decodeToString(offset, offset + size)
+            buffer.copyOfRange(offset, offset + size).toByteArray().decodeToString()
         }
 
-    override fun readInt8(fileOffset: Long) =
+    override fun readUInt8(fileOffset: Long) =
         readBytes(fileOffset, ExternalType.Int8.size).let { offset ->
             buffer[offset]
         }
 
-    override fun readInt16(fileOffset: Long) =
+    override fun readUInt16(fileOffset: Long) =
         readBytes(fileOffset, ExternalType.Int16.size).let { offset ->
-            buffer[offset] + (buffer[offset + 1].toInt() shl 8)
-        }.toShort()
+            buffer[offset] + (buffer[offset + 1].toUInt() shl 8)
+        }.toUShort()
 
-    override fun readInt32(fileOffset: Long) =
+    override fun readUInt32(fileOffset: Long) =
         readBytes(fileOffset, ExternalType.Int32.size).let { offset ->
             buffer[offset] +
-                (buffer[offset + 1].toInt() shl 8) +
-                (buffer[offset + 2].toInt() shl 16) +
-                (buffer[offset + 3].toInt() shl 24)
+                (buffer[offset + 1].toUInt() shl 8) +
+                (buffer[offset + 2].toUInt() shl 16) +
+                (buffer[offset + 3].toUInt() shl 24)
         }
 
-    override fun readInt64(fileOffset: Long) =
+    override fun readUInt64(fileOffset: Long) =
         readBytes(fileOffset, ExternalType.Int64.size).let { offset ->
             buffer[offset] +
-                    (buffer[offset + 1].toLong() shl 8) +
-                    (buffer[offset + 2].toLong() shl 16) +
-                    (buffer[offset + 3].toLong() shl 24) +
-                    (buffer[offset + 4].toLong() shl 32) +
-                    (buffer[offset + 5].toLong() shl 40) +
-                    (buffer[offset + 6].toLong() shl 48) +
-                    (buffer[offset + 7].toLong() shl 56)
+                    (buffer[offset + 1].toULong() shl 8) +
+                    (buffer[offset + 2].toULong() shl 16) +
+                    (buffer[offset + 3].toULong() shl 24) +
+                    (buffer[offset + 4].toULong() shl 32) +
+                    (buffer[offset + 5].toULong() shl 40) +
+                    (buffer[offset + 6].toULong() shl 48) +
+                    (buffer[offset + 7].toULong() shl 56)
         }
 
-    override fun readArray(fileOffset: Long, size: Int, out: ByteArray) {
+    override fun readArray(fileOffset: Long, size: Int, out: UByteArray) {
         val offset = readBytes(fileOffset, size)
         buffer.copyInto(out, 0, offset, size)
     }

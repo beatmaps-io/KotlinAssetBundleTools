@@ -20,11 +20,10 @@ fun main() {
                         }
 
                         file.objects.filter { obj -> obj.typeId == 142 }.forEach { obj ->
-                            val root = file.getTypeTreeRoot(obj.id)
-                            // var offset = obj.Offset; // Pass by ref?
-                            println("ID: ${obj.id} (Class ID ${obj.typeId}) $root")
+                            println("ID: ${obj.id} (Class ID ${obj.typeId})")
                             val sb = StringBuilder()
-                            obj.dump(sb, root, Offset(obj.offset), 0)
+                            obj.dump(sb)
+                            println(sb)
                         }
                     }
                 }

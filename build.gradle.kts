@@ -69,6 +69,13 @@ kotlin {
     sourceSets {
         nativeMain.languageSettings {
             optIn("kotlinx.cinterop.ExperimentalForeignApi")
+            optIn("kotlin.ExperimentalUnsignedTypes")
+        }
+        jvmMain.languageSettings {
+            optIn("kotlin.ExperimentalUnsignedTypes")
+        }
+        commonMain.languageSettings {
+            optIn("kotlin.ExperimentalUnsignedTypes")
         }
     }
 }

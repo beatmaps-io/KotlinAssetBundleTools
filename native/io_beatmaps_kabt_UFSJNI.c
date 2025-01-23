@@ -176,9 +176,9 @@ JNIEXPORT jint JNICALL Java_io_beatmaps_kabt_UFSJNI_getObjectInfo
             struct ObjectInfo info = objBuffer[i];
             jobject jInfo = (jobject) (*env)->GetObjectArrayElement(env, list, i);
 
-            (*env)->SetIntField(env, jInfo, idField, info.id);
-            (*env)->SetIntField(env, jInfo, offsetField, info.offset);
-            (*env)->SetIntField(env, jInfo, sizeField, info.size);
+            (*env)->SetLongField(env, jInfo, idField, info.id);
+            (*env)->SetLongField(env, jInfo, offsetField, info.offset);
+            (*env)->SetLongField(env, jInfo, sizeField, info.size);
             (*env)->SetIntField(env, jInfo, typeIdField, info.typeId);
         }
     }
@@ -275,7 +275,13 @@ JNIEXPORT jint JNICALL Java_io_beatmaps_kabt_UFSJNI_unmountArchive
 JNIEXPORT jint JNICALL Java_io_beatmaps_kabt_UFSJNI_getRefTypeTypeTree
   (JNIEnv * env, jobject thisObject, jlong handle, jstring className, jstring namespaceName, jstring assemblyName, jobject typeTree) {
     long long cHandle = 0;
-    int ret = UFS_GetRefTypeTypeTree(handle, className, namespaceName, assemblyName, &cHandle);
+    int ret = UFS_GetRefTypeTypeTree(
+        handle,
+        (*env)->GetStringUTFChars(env, className, 0),
+        (*env)->GetStringUTFChars(env, namespaceName, 0),
+        (*env)->GetStringUTFChars(env, assemblyName, 0),
+        &cHandle
+    );
 
     updateHandle(env, typeTree, cHandle);
 

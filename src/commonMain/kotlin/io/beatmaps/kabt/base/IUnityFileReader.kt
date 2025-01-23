@@ -6,7 +6,9 @@ interface IUnityFileReader : AutoCloseable {
     val length: Long
     val serializedFile: ISerializedFile
 
-    fun readValue(node: TypeTreeNodeBase, offset: Long) = readValue(node.kotlinType, offset)
+    fun readValue(node: TypeTreeNodeBase, offset: Long) =
+        readValue(node.kotlinType, offset)
+
     fun readValue(type: ExternalType?, offset: Long) =
         when (type) {
             ExternalType.Int32 -> readInt32(offset)
@@ -28,18 +30,18 @@ interface IUnityFileReader : AutoCloseable {
     fun readFloat(fileOffset: Long) = Float.fromBits(readInt32(fileOffset))
     fun readDouble(fileOffset: Long) = Double.fromBits(readInt64(fileOffset))
 
-    fun readUInt8(fileOffset: Long) = readInt8(fileOffset).toUByte()
-    fun readInt8(fileOffset: Long): Byte
+    fun readUInt8(fileOffset: Long): UByte
+    fun readInt8(fileOffset: Long) = readUInt8(fileOffset).toByte()
 
-    fun readUInt16(fileOffset: Long) = readInt16(fileOffset).toUShort()
-    fun readInt16(fileOffset: Long): Short
+    fun readUInt16(fileOffset: Long): UShort
+    fun readInt16(fileOffset: Long) = readUInt16(fileOffset).toShort()
 
-    fun readUInt32(fileOffset: Long) = readInt32(fileOffset).toUInt()
-    fun readInt32(fileOffset: Long): Int
+    fun readUInt32(fileOffset: Long): UInt
+    fun readInt32(fileOffset: Long) = readUInt32(fileOffset).toInt()
 
-    fun readUInt64(fileOffset: Long) = readInt64(fileOffset).toULong()
-    fun readInt64(fileOffset: Long): Long
+    fun readUInt64(fileOffset: Long): ULong
+    fun readInt64(fileOffset: Long) = readUInt64(fileOffset).toLong()
 
-    fun readArray(fileOffset: Long, size: Int, out: ByteArray)
+    fun readArray(fileOffset: Long, size: Int, out: UByteArray)
     fun readArray(type: ExternalType, fileOffset: Long, size: Int): List<Any>
 }
