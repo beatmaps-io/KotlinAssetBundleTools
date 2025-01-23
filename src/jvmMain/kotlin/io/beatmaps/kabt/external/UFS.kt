@@ -49,7 +49,7 @@ actual object UFS {
             UFSError.handle(
                 jni.readFile(handle, size, it, long1)
             )
-        }.sliceArray(0..long1.value.toInt()).toUByteArray()
+        }.sliceArray(0..<long1.value.toInt()).toUByteArray()
 
     actual fun seekFile(handle: Long, offset: Long, origin: SeekOrigin): Long {
         UFSError.handle(

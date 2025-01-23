@@ -8,5 +8,5 @@ import io.beatmaps.kabt.flags.ArchiveNodeFlags
 data class ArchiveNode(private val ufs: UnityFileSystem, override val path: String, override val size: Int, override val flags: Int) : IArchiveNode {
     val isSerializedFile = ArchiveNodeFlags.SerializedFile.check(flags)
 
-    override fun getReader() = UnityFileReader(ufs, path, 64 * 1024 * 1024)
+    override fun getReader(bufferSize: Int) = UnityFileReader(ufs, path, bufferSize)
 }

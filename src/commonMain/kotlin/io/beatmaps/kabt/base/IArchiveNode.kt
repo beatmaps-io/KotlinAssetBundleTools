@@ -5,5 +5,5 @@ interface IArchiveNode {
     val size: Int
     val flags: Int
 
-    fun getReader(): IUnityFileReader
+    fun getReader(bufferSize: Int = 64 * 1024 * 1024): IUnityFileReader
 }
