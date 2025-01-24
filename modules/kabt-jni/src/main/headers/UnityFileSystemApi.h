@@ -1,5 +1,9 @@
 #include <stdint.h>
 
+#if !defined(__cdecl)
+#define __cdecl
+#endif
+
 struct ObjectInfo {
   uint64_t id;
   uint64_t offset;
