@@ -36,17 +36,17 @@ library {
     variants.configureEach {
         val osName = System.getProperty("os.name").lowercase().replace(" ", "")
         val osFamily = targetMachine.operatingSystemFamily
-        val ext = if (osFamily.isWindows && osName.contains("windows")) {
-            "dll"
-        } else if (osFamily.isLinux && osName.contains("linux")) {
-            "so"
-        } else {
-            "dylib"
-        }
 
         dependencies {
-            nativeLinkOnly(files("ufs/UnityFileSystemApi.lib"))
-            nativeRuntimeOnly(files("ufs/UnityFileSystemApi.$ext"))
+            if (osFamily.isWindows && osName.contains("windows")) {
+                nativeLinkOnly(files("ufs/UnityFileSystemApi.lib"))
+                nativeRuntimeOnly(files("ufs/UnityFileSystemApi.dll"))
+            } else if (osFamily.isLinux && osName.contains("linux")) {
+                nativeImplementation("ufs/UnityFileSystemApi.so")
+            } else {
+                nativeImplementation("ufs/UnityFileSystemApi.dylib")
+            }
+
         }
     }
 }
