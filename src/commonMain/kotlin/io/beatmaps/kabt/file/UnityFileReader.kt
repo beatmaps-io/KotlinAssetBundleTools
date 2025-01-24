@@ -1,6 +1,6 @@
 package io.beatmaps.kabt.file
 
-import io.beatmaps.kabt.ExternalType
+import io.beatmaps.kabt.type.ExternalType
 import io.beatmaps.kabt.base.IUnityFileReader
 import io.beatmaps.kabt.exception.IOException
 import io.beatmaps.kabt.external.UFS

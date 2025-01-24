@@ -1,4 +1,4 @@
-package io.beatmaps.kabt
+package io.beatmaps.kabt.type
 
 enum class ExternalType(val size: Int) {
     Int32(4), UInt32(4),

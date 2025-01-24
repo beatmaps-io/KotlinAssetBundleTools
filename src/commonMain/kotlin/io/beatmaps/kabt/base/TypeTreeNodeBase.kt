@@ -1,6 +1,6 @@
 package io.beatmaps.kabt.base
 
-import io.beatmaps.kabt.ExternalType
+import io.beatmaps.kabt.type.ExternalType
 
 abstract class TypeTreeNodeBase {
     abstract val type: String

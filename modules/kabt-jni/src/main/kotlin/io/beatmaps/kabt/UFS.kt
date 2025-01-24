@@ -4,6 +4,8 @@ import io.beatmaps.kabt.base.IObject
 import io.beatmaps.kabt.external.ArchiveNodeData
 import io.beatmaps.kabt.external.ExternalReferenceData
 import io.beatmaps.kabt.external.TypeTreeNodeInfoData
+import java.io.File
+import java.nio.file.Files
 
 class UFSJNI {
     external fun init(): Int
@@ -29,9 +31,28 @@ class UFSJNI {
     external fun getRefTypeTypeTree(handle: Long, className: String, namespaceName: String, assemblyName: String, typeTree: JNIHandleL): Int
 
     companion object {
+        private val path = System.getProperty("java.io.tmpdir")
+
+        private fun extractLibrary(name: String) {
+            try {
+                System.loadLibrary(name)
+            } catch (linkError: UnsatisfiedLinkError) {
+                val file = System.mapLibraryName(name)
+                val dest = File(path, file)
+
+                if (!dest.exists()) {
+                    UFSJNI::class.java.classLoader.getResourceAsStream("kabt/windows/$file")?.use { source ->
+                        Files.copy(source, dest.toPath())
+                    }
+                }
+
+                System.load(dest.toString())
+            }
+        }
+
         init {
-            System.loadLibrary("UnityFileSystemApi")
-            System.loadLibrary("kabt-wrapper")
+            extractLibrary("UnityFileSystemApi")
+            extractLibrary("kabt-jni")
         }
     }
 }

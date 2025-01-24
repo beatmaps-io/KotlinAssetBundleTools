@@ -1,5 +1,4 @@
-package io.beatmaps.kabt
-
+import io.beatmaps.kabt.UnityArchive
 import io.beatmaps.kabt.file.UnityFileSystem
 import io.beatmaps.kabt.flags.ArchiveNodeFlags
 import io.beatmaps.kabt.tree.ComplexAsset

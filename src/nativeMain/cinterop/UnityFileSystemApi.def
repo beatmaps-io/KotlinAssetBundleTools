@@ -1,6 +1,6 @@
-compilerOpts = -Inative
+compilerOpts = -Imodules/kabt-jni/src/main/headers
 staticLibraries.mingw = UnityFileSystemApi.lib
-libraryPaths = native
+libraryPaths = modules/kabt-jni/ufs
 ---
 
 #include "UnityFileSystemApi.h"

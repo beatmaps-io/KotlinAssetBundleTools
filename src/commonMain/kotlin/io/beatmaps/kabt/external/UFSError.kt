@@ -6,7 +6,8 @@ import io.beatmaps.kabt.exception.IOException
 import io.beatmaps.kabt.exception.InvalidOperationException
 
 object UFSError {
-    fun handle(ret: Int, filename: String = "") = handle(ReturnCode.fromInt(ret), filename)
+    fun handle(ret: UInt, filename: String = "") = handle(ReturnCode.fromInt(ret), filename)
+    fun handle(ret: Int, filename: String = "") = handle(ret.toUInt(), filename)
 
     private fun handle(ret: ReturnCode, filename: String = "") {
         when (ret) {

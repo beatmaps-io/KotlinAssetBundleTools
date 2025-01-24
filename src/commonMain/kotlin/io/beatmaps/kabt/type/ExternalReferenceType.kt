@@ -1,4 +1,4 @@
-package io.beatmaps.kabt
+package io.beatmaps.kabt.type
 
 enum class ExternalReferenceType(val code: Int) {
     NonAssetType(0),

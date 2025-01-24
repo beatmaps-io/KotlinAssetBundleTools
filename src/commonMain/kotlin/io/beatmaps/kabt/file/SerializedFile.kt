@@ -1,7 +1,7 @@
 package io.beatmaps.kabt.file
 
 import io.beatmaps.kabt.ExternalReference
-import io.beatmaps.kabt.ExternalReferenceType
+import io.beatmaps.kabt.type.ExternalReferenceType
 import io.beatmaps.kabt.tree.Object
 import io.beatmaps.kabt.TypeTreeNode
 import io.beatmaps.kabt.base.ISerializedFile

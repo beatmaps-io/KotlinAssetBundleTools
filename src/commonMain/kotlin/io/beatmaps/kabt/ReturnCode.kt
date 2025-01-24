@@ -1,23 +1,23 @@
 package io.beatmaps.kabt
 
-enum class ReturnCode(val code: Int) {
-    Success(0),
-    AlreadyInitialized(1),
-    NotInitialized(2),
-    FileNotFound(3),
-    FileFormatError(4),
-    InvalidArgument(5),
-    HigherSerializedFileVersion(6),
-    DestinationBufferTooSmall(7),
-    InvalidObjectId(8),
-    UnknownError(9),
-    FileError(10),
-    ErrorCreatingArchiveFile(11),
-    ErrorAddingFileToArchive(12),
-    TypeNotFound(13);
+enum class ReturnCode(val code: UInt) {
+    Success(0u),
+    AlreadyInitialized(1u),
+    NotInitialized(2u),
+    FileNotFound(3u),
+    FileFormatError(4u),
+    InvalidArgument(5u),
+    HigherSerializedFileVersion(6u),
+    DestinationBufferTooSmall(7u),
+    InvalidObjectId(8u),
+    UnknownError(9u),
+    FileError(10u),
+    ErrorCreatingArchiveFile(11u),
+    ErrorAddingFileToArchive(12u),
+    TypeNotFound(13u);
 
     companion object {
         private val map = entries.associateBy { it.code }
-        fun fromInt(code: Int) = map.getValue(code)
+        fun fromInt(code: UInt) = map.getValue(code)
     }
 }

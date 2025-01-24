@@ -1,6 +1,6 @@
 package io.beatmaps.kabt.base
 
-import io.beatmaps.kabt.ExternalType
+import io.beatmaps.kabt.type.ExternalType
 
 interface IUnityFileReader : AutoCloseable {
     val length: Long
