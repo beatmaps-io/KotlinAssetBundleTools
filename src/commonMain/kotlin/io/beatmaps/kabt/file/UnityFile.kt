@@ -1,10 +1,11 @@
 package io.beatmaps.kabt.file
 
+import io.beatmaps.kabt.Handle
 import io.beatmaps.kabt.SeekOrigin
 import io.beatmaps.kabt.base.IUnityFile
 import io.beatmaps.kabt.external.UFS
 
-class UnityFile(private val handle: Long) : IUnityFile {
+class UnityFile(private val handle: Handle) : IUnityFile {
     override val size by lazy {
         UFS.getFileSize(handle)
     }

@@ -5,11 +5,13 @@ import io.beatmaps.kabt.flags.ArchiveNodeFlags
 import io.beatmaps.kabt.tree.ComplexAsset
 import io.beatmaps.kabt.tree.MapAsset
 import io.beatmaps.kabt.tree.StringAsset
+import java.nio.file.Paths
 
 fun main() {
     try {
         UnityFileSystem().use { ufs ->
-            val archive = ufs.mount("C:\\Users\\micro\\Downloads\\VivifyExample - you\\bundleWindows2019.vivify", "/")
+            val path = Paths.get("./bundle/example.bundle").toAbsolutePath().normalize().toString();
+            val archive = ufs.mount(path, "/")
 
             val assets = archive.nodes.filter { it.isSerializedFile }.mapNotNull { node ->
                 node.getReader().use { reader ->

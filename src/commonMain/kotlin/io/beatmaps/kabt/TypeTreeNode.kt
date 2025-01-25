@@ -6,7 +6,7 @@ import io.beatmaps.kabt.file.UnityFileSystem
 import io.beatmaps.kabt.flags.TreeTypeFlags
 import io.beatmaps.kabt.flags.TypeTreeMetaFlags
 
-class TypeTreeNode(private val ufs: UnityFileSystem, private val handle: Long, nodeIndex: Int) : TypeTreeNodeBase() {
+class TypeTreeNode(private val ufs: UnityFileSystem, private val handle: Handle, nodeIndex: Int) : TypeTreeNodeBase() {
     override val type: String
     override val name: String
     private val flags: Byte

@@ -1,5 +1,6 @@
 package io.beatmaps.kabt.external
 
+import io.beatmaps.kabt.Handle
 import io.beatmaps.kabt.JNIHandleI
 import io.beatmaps.kabt.JNIHandleL
 import io.beatmaps.kabt.SeekOrigin
@@ -14,125 +15,125 @@ actual object UFS {
     actual fun init() = UFSError.handle(jni.init())
     actual fun cleanup() = UFSError.handle(jni.cleanup())
 
-    actual fun mountArchive(path: String, mountPoint: String): Long {
+    actual fun mountArchive(path: String, mountPoint: String): Handle {
         UFSError.handle(jni.mountArchive(path, mountPoint, long1))
 
-        return long1.value
+        return Handle(long1.value)
     }
 
-    actual fun unmountArchive(handle: Long) =
+    actual fun unmountArchive(handle: Handle) =
         UFSError.handle(
-            jni.unmountArchive(handle)
+            jni.unmountArchive(handle.long)
         )
 
-    actual fun getArchiveNodeCount(handle: Long): Long {
-        UFSError.handle(jni.getArchiveNodeCount(handle, long1))
+    actual fun getArchiveNodeCount(handle: Handle): Long {
+        UFSError.handle(jni.getArchiveNodeCount(handle.long, long1))
 
         return long1.value
     }
 
-    actual fun getArchiveNode(handle: Long, nodeIndex: Int) =
+    actual fun getArchiveNode(handle: Handle, nodeIndex: Int) =
         ArchiveNodeData().also { data ->
-            UFSError.handle(jni.getArchiveNode(handle, nodeIndex, data))
+            UFSError.handle(jni.getArchiveNode(handle.long, nodeIndex, data))
         }
 
-    actual fun openFile(path: String): Long {
+    actual fun openFile(path: String): Handle {
         UFSError.handle(
             jni.openFile(path, long1)
         )
 
-        return long1.value
+        return Handle(long1.value)
     }
 
-    actual fun readFile(handle: Long, size: Long) =
+    actual fun readFile(handle: Handle, size: Long) =
         ByteArray(size.toInt()).also {
             UFSError.handle(
-                jni.readFile(handle, size, it, long1)
+                jni.readFile(handle.long, size, it, long1)
             )
         }.sliceArray(0..<long1.value.toInt()).toUByteArray()
 
-    actual fun seekFile(handle: Long, offset: Long, origin: SeekOrigin): Long {
+    actual fun seekFile(handle: Handle, offset: Long, origin: SeekOrigin): Long {
         UFSError.handle(
-            jni.seekFile(handle, offset, origin.code, long1)
+            jni.seekFile(handle.long, offset, origin.code, long1)
         )
 
         return long1.value
     }
 
-    actual fun getFileSize(handle: Long): Long {
+    actual fun getFileSize(handle: Handle): Long {
         UFSError.handle(
-            jni.getFileSize(handle, long1)
+            jni.getFileSize(handle.long, long1)
         )
 
         return long1.value
     }
 
-    actual fun closeFile(handle: Long) =
+    actual fun closeFile(handle: Handle) =
         UFSError.handle(
-            jni.closeFile(handle)
+            jni.closeFile(handle.long)
         )
 
-    actual fun openSerializedFile(path: String): Long {
+    actual fun openSerializedFile(path: String): Handle {
         UFSError.handle(
             jni.openSerializedFile(path, long1)
         )
 
-        return long1.value
+        return Handle(long1.value)
     }
 
-    actual fun closeSerializedFile(handle: Long) =
+    actual fun closeSerializedFile(handle: Handle) =
         UFSError.handle(
-            jni.closeSerializedFile(handle)
+            jni.closeSerializedFile(handle.long)
         )
 
-    actual fun getExternalReferenceCount(handle: Long): Int {
+    actual fun getExternalReferenceCount(handle: Handle): Int {
         UFSError.handle(
-            jni.getExternalReferenceCount(handle, int1)
+            jni.getExternalReferenceCount(handle.long, int1)
         )
 
         return int1.value
     }
 
-    actual fun getExternalReference(handle: Long, index: Int) =
+    actual fun getExternalReference(handle: Handle, index: Int) =
         ExternalReferenceData().also { data ->
-            UFSError.handle(jni.getExternalReference(handle, index, data))
+            UFSError.handle(jni.getExternalReference(handle.long, index, data))
         }
 
-    actual fun getObjectCount(handle: Long): Int {
+    actual fun getObjectCount(handle: Handle): Int {
         UFSError.handle(
-            jni.getObjectCount(handle, int1)
+            jni.getObjectCount(handle.long, int1)
         )
 
         return int1.value
     }
 
-    actual fun getObjectInfo(handle: Long, len: Int): List<IObject> =
+    actual fun getObjectInfo(handle: Handle, len: Int): List<IObject> =
         Array<IObject>(len) { ObjectInfoData() }.also { data ->
             UFSError.handle(
-                jni.getObjectInfo(handle, len, data)
+                jni.getObjectInfo(handle.long, len, data)
             )
         }.toList()
 
-    actual fun getTypeTree(handle: Long, objectId: Long): Long {
+    actual fun getTypeTree(handle: Handle, objectId: Long): Handle {
         UFSError.handle(
-            jni.getTypeTree(handle, objectId, long1)
+            jni.getTypeTree(handle.long, objectId, long1)
         )
 
-        return long1.value
+        return Handle(long1.value)
     }
 
-    actual fun getRefTypeTypeTree(handle: Long, className: String, namespaceName: String, assemblyName: String): Long {
+    actual fun getRefTypeTypeTree(handle: Handle, className: String, namespaceName: String, assemblyName: String): Handle {
         UFSError.handle(
-            jni.getRefTypeTypeTree(handle, className, namespaceName, assemblyName, long1)
+            jni.getRefTypeTypeTree(handle.long, className, namespaceName, assemblyName, long1)
         )
 
-        return long1.value
+        return Handle(long1.value)
     }
 
-    actual fun getTypeTreeNodeInfo(handle: Long, node: Int) =
+    actual fun getTypeTreeNodeInfo(handle: Handle, node: Int) =
         TypeTreeNodeInfoData().also {
             UFSError.handle(
-                jni.getTypeTreeNodeInfo(handle, node, it)
+                jni.getTypeTreeNodeInfo(handle.long, node, it)
             )
         }
 }

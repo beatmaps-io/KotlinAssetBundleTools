@@ -1,5 +1,6 @@
 package io.beatmaps.kabt.external
 
+import io.beatmaps.kabt.Handle
 import io.beatmaps.kabt.SeekOrigin
 import io.beatmaps.kabt.base.IObject
 import io.beatmaps.kabt.exception.InvalidOperationException
@@ -57,45 +58,45 @@ actual object UFS {
     actual fun init() = UFSError.handle(UFS_Init())
     actual fun cleanup() = UFSError.handle(UFS_Cleanup())
 
-    actual fun mountArchive(path: String, mountPoint: String): Long {
+    actual fun mountArchive(path: String, mountPoint: String): Handle {
         UFSError.handle(
             UFS_MountArchive(path, mountPoint, long1.ptr)
         )
 
-        return long1.value.toLong()
+        return Handle(long1.value)
     }
 
-    actual fun unmountArchive(handle: Long) = UFSError.handle(UFS_UnmountArchive(handle.toULong()))
+    actual fun unmountArchive(handle: Handle) = UFSError.handle(UFS_UnmountArchive(handle.uLong))
 
-    actual fun getArchiveNodeCount(handle: Long): Long {
+    actual fun getArchiveNodeCount(handle: Handle): Long {
         UFSError.handle(
-            UFS_GetArchiveNodeCount(handle.toULong(), long1.ptr)
+            UFS_GetArchiveNodeCount(handle.uLong, long1.ptr)
         )
 
         return long1.value.toLong()
     }
 
-    actual fun getArchiveNode(handle: Long, nodeIndex: Int): ArchiveNodeData {
+    actual fun getArchiveNode(handle: Handle, nodeIndex: Int): ArchiveNodeData {
         UFSError.handle(
-            UFS_GetArchiveNode(handle.toULong(), nodeIndex.toUInt(), buffer1, BUFFER_1_SIZE, int1.ptr, int2.ptr)
+            UFS_GetArchiveNode(handle.uLong, nodeIndex.toUInt(), buffer1, BUFFER_1_SIZE, int1.ptr, int2.ptr)
         )
 
         return ArchiveNodeData(buffer1.toKString(), int1.value.toInt(), int2.value.toInt())
     }
 
-    actual fun openFile(path: String): Long {
+    actual fun openFile(path: String): Handle {
         UFSError.handle(
             UFS_OpenFile(path, long1.ptr)
         )
 
-        return long1.value.toLong()
+        return Handle(long1.value)
     }
 
-    actual fun readFile(handle: Long, size: Long) = memScoped {
+    actual fun readFile(handle: Handle, size: Long) = memScoped {
         val cBuffer = allocArray<ByteVar>(size)
 
         UFSError.handle(
-            UFS_ReadFile(handle.toULong(), size.toULong(), cBuffer, long1.ptr)
+            UFS_ReadFile(handle.uLong, size.toULong(), cBuffer, long1.ptr)
         )
 
         if (long1.value > Int.MAX_VALUE.toUInt())
@@ -104,62 +105,62 @@ actual object UFS {
         cBuffer.readBytes(long1.value.toInt()).toUByteArray()
     }
 
-    actual fun seekFile(handle: Long, offset: Long, origin: SeekOrigin): Long {
+    actual fun seekFile(handle: Handle, offset: Long, origin: SeekOrigin): Long {
         UFSError.handle(
-            UFS_SeekFile(handle.toULong(), offset.toULong(), origin.code, long1.ptr)
+            UFS_SeekFile(handle.uLong, offset.toULong(), origin.code, long1.ptr)
         )
 
         return long1.value.toLong()
     }
 
-    actual fun getFileSize(handle: Long): Long {
+    actual fun getFileSize(handle: Handle): Long {
         UFSError.handle(
-            UFS_GetFileSize(handle.toULong(), long1.ptr)
+            UFS_GetFileSize(handle.uLong, long1.ptr)
         )
 
         return long1.value.toLong()
     }
 
-    actual fun closeFile(handle: Long) = UFSError.handle(UFS_CloseFile(handle.toULong()))
+    actual fun closeFile(handle: Handle) = UFSError.handle(UFS_CloseFile(handle.uLong))
 
-    actual fun openSerializedFile(path: String): Long {
+    actual fun openSerializedFile(path: String): Handle {
         UFSError.handle(
             UFS_OpenSerializedFile(path, long1.ptr)
         )
 
-        return long1.value.toLong()
+        return Handle(long1.value)
     }
 
-    actual fun closeSerializedFile(handle: Long) = UFSError.handle(UFS_CloseSerializedFile(handle.toULong()))
+    actual fun closeSerializedFile(handle: Handle) = UFSError.handle(UFS_CloseSerializedFile(handle.uLong))
 
-    actual fun getExternalReferenceCount(handle: Long): Int {
+    actual fun getExternalReferenceCount(handle: Handle): Int {
         UFSError.handle(
-            UFS_GetExternalReferenceCount(handle.toULong(), int1.ptr)
+            UFS_GetExternalReferenceCount(handle.uLong, int1.ptr)
         )
 
         return int1.value.toInt()
     }
 
-    actual fun getExternalReference(handle: Long, index: Int): ExternalReferenceData {
+    actual fun getExternalReference(handle: Handle, index: Int): ExternalReferenceData {
         UFSError.handle(
-            UFS_GetExternalReference(handle.toULong(), index.toUInt(), buffer1, BUFFER_1_SIZE, buffer2, int1.ptr)
+            UFS_GetExternalReference(handle.uLong, index.toUInt(), buffer1, BUFFER_1_SIZE, buffer2, int1.ptr)
         )
 
         return ExternalReferenceData(buffer1.toKString(), buffer2.toKString(), int1.value.toInt())
     }
 
-    actual fun getObjectCount(handle: Long): Int {
+    actual fun getObjectCount(handle: Handle): Int {
         UFSError.handle(
-            UFS_GetObjectCount(handle.toULong(), int1.ptr)
+            UFS_GetObjectCount(handle.uLong, int1.ptr)
         )
 
         return int1.value.toInt()
     }
 
-    actual fun getObjectInfo(handle: Long, len: Int): List<IObject> = memScoped {
+    actual fun getObjectInfo(handle: Handle, len: Int): List<IObject> = memScoped {
         val arr = allocArray<ObjectInfo>(len)
         UFSError.handle(
-            UFS_GetObjectInfo(handle.toULong(), arr, len.toUInt())
+            UFS_GetObjectInfo(handle.uLong, arr, len.toUInt())
         )
 
         return List(len) { idx ->
@@ -168,25 +169,25 @@ actual object UFS {
         }
     }
 
-    actual fun getTypeTree(handle: Long, objectId: Long): Long {
+    actual fun getTypeTree(handle: Handle, objectId: Long): Handle {
         UFSError.handle(
-            UFS_GetTypeTree(handle.toULong(), objectId.toULong(), long1.ptr)
+            UFS_GetTypeTree(handle.uLong, objectId.toULong(), long1.ptr)
         )
 
-        return long1.value.toLong()
+        return Handle(long1.value)
     }
 
-    actual fun getRefTypeTypeTree(handle: Long, className: String, namespaceName: String, assemblyName: String): Long {
+    actual fun getRefTypeTypeTree(handle: Handle, className: String, namespaceName: String, assemblyName: String): Handle {
         UFSError.handle(
-            UFS_GetRefTypeTypeTree(handle.toULong(), className, namespaceName, assemblyName, long1.ptr)
+            UFS_GetRefTypeTypeTree(handle.uLong, className, namespaceName, assemblyName, long1.ptr)
         )
 
-        return long1.value.toLong()
+        return Handle(long1.value)
     }
 
-    actual fun getTypeTreeNodeInfo(handle: Long, node: Int): TypeTreeNodeInfoData {
+    actual fun getTypeTreeNodeInfo(handle: Handle, node: Int): TypeTreeNodeInfoData {
         UFSError.handle(
-            UFS_GetTypeTreeNodeInfo(handle.toULong(), node.toUInt(), buffer1, BUFFER_1_SIZE, buffer2, BUFFER_2_SIZE, int1.ptr, int2.ptr, byte1.ptr, int3.ptr, int4.ptr, int5.ptr)
+            UFS_GetTypeTreeNodeInfo(handle.uLong, node.toUInt(), buffer1, BUFFER_1_SIZE, buffer2, BUFFER_2_SIZE, int1.ptr, int2.ptr, byte1.ptr, int3.ptr, int4.ptr, int5.ptr)
         )
 
         return TypeTreeNodeInfoData(buffer1.toKString(), buffer2.toKString(), int1.value.toInt(), int2.value.toInt(), byte1.value, int3.value.toInt(), int4.value.toInt(), int5.value.toInt())

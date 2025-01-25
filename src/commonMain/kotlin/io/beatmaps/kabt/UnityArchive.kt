@@ -4,7 +4,7 @@ import io.beatmaps.kabt.base.IUnityArchive
 import io.beatmaps.kabt.external.UFS
 import io.beatmaps.kabt.file.UnityFileSystem
 
-class UnityArchive(private val ufs: UnityFileSystem, private val mountPoint: String, private val handle: Long) : IUnityArchive {
+class UnityArchive(private val ufs: UnityFileSystem, private val mountPoint: String, private val handle: Handle) : IUnityArchive {
     override val nodes by lazy {
         val count = UFS.getArchiveNodeCount(handle)
 

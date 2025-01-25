@@ -1,6 +1,7 @@
 package io.beatmaps.kabt.file
 
 import io.beatmaps.kabt.ExternalReference
+import io.beatmaps.kabt.Handle
 import io.beatmaps.kabt.type.ExternalReferenceType
 import io.beatmaps.kabt.tree.Object
 import io.beatmaps.kabt.TypeTreeNode
@@ -8,7 +9,7 @@ import io.beatmaps.kabt.base.ISerializedFile
 import io.beatmaps.kabt.base.IUnityFileReader
 import io.beatmaps.kabt.external.UFS
 
-class SerializedFile(private val ufs: UnityFileSystem, private val reader: IUnityFileReader, private val handle: Long) : ISerializedFile {
+class SerializedFile(private val ufs: UnityFileSystem, private val reader: IUnityFileReader, private val handle: Handle) : ISerializedFile {
     override val objects by lazy {
         val count = UFS.getObjectCount(handle)
         UFS.getObjectInfo(handle, count).map {
@@ -44,7 +45,7 @@ class SerializedFile(private val ufs: UnityFileSystem, private val reader: IUnit
     }
 
     companion object {
-        private val cache = mutableMapOf<Long, TypeTreeNode>()
+        private val cache = mutableMapOf<Handle, TypeTreeNode>()
     }
 }
 
