@@ -5,7 +5,7 @@ import io.beatmaps.kabt.external.UFS
 import io.beatmaps.kabt.file.UnityFileSystem
 
 class UnityArchive(private val ufs: UnityFileSystem, private val mountPoint: String, private val handle: Handle) : IUnityArchive {
-    override val nodes by lazy {
+    private val nodeLazy = lazy {
         val count = UFS.getArchiveNodeCount(handle)
 
         if (count == 0L) emptyList<ArchiveNode>()
@@ -17,7 +17,19 @@ class UnityArchive(private val ufs: UnityFileSystem, private val mountPoint: Str
         }
     }
 
+    override val nodes by nodeLazy
+
+    val crc32 by lazy {
+        nodes.fold(0u) { crc32, node ->
+            node.reader.crc32(crc32)
+        }
+    }
+
     override fun close() {
+        if (nodeLazy.isInitialized()) {
+            nodes.forEach { it.close() }
+        }
+
         UFS.unmountArchive(handle)
     }
 }

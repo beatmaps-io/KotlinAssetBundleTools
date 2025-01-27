@@ -13,13 +13,17 @@ class UnityFileReader(private val ufs: UnityFileSystem, private val path: String
     private var bufferStartInFile = 0L
     private var bufferEndInFile = 0L
 
-    override val serializedFile by lazy {
+    private val serializedFileLazy = lazy {
         SerializedFile(ufs, this, UFS.openSerializedFile(path))
     }
+    override val serializedFile by serializedFileLazy
 
     override fun close() {
         file.close()
-        serializedFile.close()
+
+        if (serializedFileLazy.isInitialized()) {
+            serializedFile.close()
+        }
     }
 
     override fun readString(fileOffset: Long, size: Int) =
@@ -82,5 +86,23 @@ class UnityFileReader(private val ufs: UnityFileSystem, private val path: String
         }
 
         return (fileOffset - bufferStartInFile).toInt()
+    }
+
+    fun crc32(previous: UInt): UInt
+    {
+        val fileOffset = 0L
+        val readSize = if (length > bufferSize) bufferSize else length.toInt()
+        var readBytes = 0
+        var crc32 = previous
+
+        while (readBytes < length)
+        {
+            val offset2 = readBytes(fileOffset, readSize)
+            val end = offset2 + readSize
+            crc32 = CRC32.calculateCRC32(buffer.sliceArray(offset2..<end), crc32)
+            readBytes += readSize
+        }
+
+        return crc32
     }
 }
