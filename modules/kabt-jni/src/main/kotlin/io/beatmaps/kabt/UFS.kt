@@ -33,6 +33,10 @@ class UFSJNI {
     companion object {
         private val path = System.getProperty("java.io.tmpdir")
 
+        private val osSlug = System.getProperty("os.name").lowercase().replace(" ", "").let { osName ->
+            setOf("winsows", "macos").firstOrNull { osName.contains(it) } ?: "linux"
+        }
+
         private fun extractLibrary(name: String) {
             try {
                 System.loadLibrary(name)
@@ -41,7 +45,7 @@ class UFSJNI {
                 val dest = File(path, file)
 
                 if (!dest.exists()) {
-                    UFSJNI::class.java.classLoader.getResourceAsStream("kabt/windows/$file")?.use { source ->
+                    UFSJNI::class.java.classLoader.getResourceAsStream("kabt/$osSlug/$file")?.use { source ->
                         Files.copy(source, dest.toPath())
                     }
                 }
