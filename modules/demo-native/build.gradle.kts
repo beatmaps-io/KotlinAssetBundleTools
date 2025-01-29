@@ -13,10 +13,18 @@ kotlin {
         }
     }
 
+    linuxX64 {
+        binaries {
+            executable {
+                linkerOpts += "${project(":kabt-jni").projectDir}/ufs/libUnityFileSystemApi.so"
+            }
+        }
+    }
+
     macosX64 {
         binaries {
             executable {
-                linkerOpts += "${rootProject.projectDir}/modules/kabt-jni/ufs/libUnityFileSystemApi.dylib"
+                linkerOpts += "${project(":kabt-jni").projectDir}/ufs/libUnityFileSystemApi.dylib"
             }
         }
     }
@@ -38,7 +46,7 @@ kotlin {
 
 
 tasks {
-    setOf("mingwX64", "macosX64").forEach { target ->
+    setOf("mingwX64", "macosX64", "linuxX64").forEach { target ->
         setOf("Debug", "Release").forEach { buildType ->
             val copyTask = register("copyUFS$target$buildType", Copy::class) {
                 group = "package"
