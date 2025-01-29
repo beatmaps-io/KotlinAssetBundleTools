@@ -3,20 +3,20 @@
 #include "io_beatmaps_kabt_UFSJNI.h"
 #include "UnityFileSystemApi.h"
 
-#define bufferSize 255
+#define bufferSize 512
 char buff[bufferSize];
 char buff2[bufferSize];
 
 char * buffer = buff;
 char * buffer2 = buff2;
 
-void updateHandle(JNIEnv * env, jobject handle, long long value) {
+void updateHandle(JNIEnv * env, jobject handle, uint64_t value) {
     jclass clazz = (*env)->GetObjectClass(env, handle);
     jfieldID valueField = (*env)->GetFieldID(env, clazz, "value", "J");
     (*env)->SetLongField(env, handle, valueField, value);
 }
 
-void updateHandleI(JNIEnv * env, jobject handle, int value) {
+void updateHandleI(JNIEnv * env, jobject handle, uint32_t value) {
     jclass clazz = (*env)->GetObjectClass(env, handle);
     jfieldID valueField = (*env)->GetFieldID(env, clazz, "value", "I");
     (*env)->SetIntField(env, handle, valueField, value);
@@ -36,8 +36,8 @@ JNIEXPORT jint JNICALL Java_io_beatmaps_kabt_UFSJNI_cleanup
 
 JNIEXPORT jint JNICALL Java_io_beatmaps_kabt_UFSJNI_mountArchive
   (JNIEnv * env, jobject thisObject, jstring path, jstring mountPoint, jobject handle) {
-    long long cHandle = 0;
-    int ret = UFS_MountArchive(
+    uint64_t cHandle = 0;
+    uint32_t ret = UFS_MountArchive(
         (*env)->GetStringUTFChars(env, path, 0),
         (*env)->GetStringUTFChars(env, mountPoint, 0),
         &cHandle
@@ -50,8 +50,8 @@ JNIEXPORT jint JNICALL Java_io_beatmaps_kabt_UFSJNI_mountArchive
 
 JNIEXPORT jint JNICALL Java_io_beatmaps_kabt_UFSJNI_getArchiveNodeCount
   (JNIEnv * env, jobject thisObject, jlong handle, jobject count) {
-    long long cHandle = 0;
-    int ret = UFS_GetArchiveNodeCount(handle, &cHandle);
+    uint64_t cHandle = 0;
+    uint32_t ret = UFS_GetArchiveNodeCount(handle, &cHandle);
 
     updateHandle(env, count, cHandle);
 
@@ -60,10 +60,11 @@ JNIEXPORT jint JNICALL Java_io_beatmaps_kabt_UFSJNI_getArchiveNodeCount
 
 JNIEXPORT jint JNICALL Java_io_beatmaps_kabt_UFSJNI_getArchiveNode
   (JNIEnv * env, jobject thisObject, jlong handle, jint nodeIndex, jobject data) {
-    long cHandle = 0;
-    int cFlags = 0;
+    uint64_t cHandle = 0;
+    uint32_t cFlags = 0;
     char * pathBuffer = buffer;
-    int ret = UFS_GetArchiveNode(handle, nodeIndex, pathBuffer, bufferSize, &cHandle, &cFlags);
+
+    uint32_t ret = UFS_GetArchiveNode(handle, nodeIndex, pathBuffer, bufferSize, &cHandle, &cFlags);
 
     jclass clazz = (*env)->GetObjectClass(env, data);
 
@@ -82,8 +83,8 @@ JNIEXPORT jint JNICALL Java_io_beatmaps_kabt_UFSJNI_getArchiveNode
 
 JNIEXPORT jint JNICALL Java_io_beatmaps_kabt_UFSJNI_openFile
   (JNIEnv * env, jobject thisObject, jstring path, jobject handle) {
-    long long cHandle = 0;
-    int ret = UFS_OpenFile(
+    uint64_t cHandle = 0;
+    uint32_t ret = UFS_OpenFile(
         (*env)->GetStringUTFChars(env, path, 0),
         &cHandle
     );
@@ -95,8 +96,8 @@ JNIEXPORT jint JNICALL Java_io_beatmaps_kabt_UFSJNI_openFile
 
 JNIEXPORT jint JNICALL Java_io_beatmaps_kabt_UFSJNI_getFileSize
   (JNIEnv * env, jobject thisObject, jlong handle, jobject size) {
-    long long cSize = 0;
-    int ret = UFS_GetFileSize(handle, &cSize);
+    uint64_t cSize = 0;
+    uint32_t ret = UFS_GetFileSize(handle, &cSize);
 
     updateHandle(env, size, cSize);
 
@@ -105,8 +106,8 @@ JNIEXPORT jint JNICALL Java_io_beatmaps_kabt_UFSJNI_getFileSize
 
 JNIEXPORT jint JNICALL Java_io_beatmaps_kabt_UFSJNI_openSerializedFile
   (JNIEnv * env, jobject thisObject, jstring path, jobject handle) {
-    long long cHandle = 0;
-    int ret = UFS_OpenSerializedFile(
+    uint64_t cHandle = 0;
+    uint32_t ret = UFS_OpenSerializedFile(
       (*env)->GetStringUTFChars(env, path, 0),
       &cHandle
     );
@@ -118,8 +119,8 @@ JNIEXPORT jint JNICALL Java_io_beatmaps_kabt_UFSJNI_openSerializedFile
 
 JNIEXPORT jint JNICALL Java_io_beatmaps_kabt_UFSJNI_getExternalReferenceCount
   (JNIEnv * env, jobject thisObject, jlong handle, jobject count) {
-    int cCount = 0;
-    int ret = UFS_GetExternalReferenceCount(handle, &cCount);
+    uint32_t cCount = 0;
+    uint32_t ret = UFS_GetExternalReferenceCount(handle, &cCount);
 
     updateHandleI(env, count, cCount);
 
@@ -128,10 +129,10 @@ JNIEXPORT jint JNICALL Java_io_beatmaps_kabt_UFSJNI_getExternalReferenceCount
 
 JNIEXPORT jint JNICALL Java_io_beatmaps_kabt_UFSJNI_getExternalReference
   (JNIEnv * env, jobject thisObject, jlong handle, jint nodeIndex, jobject data) {
-    int cHandle = 0;
+    uint32_t cHandle = 0;
     char * pathBuffer = buffer;
     char * guidBuffer = buffer2;
-    int ret = UFS_GetExternalReference(handle, nodeIndex, pathBuffer, bufferSize, guidBuffer, &cHandle);
+    uint32_t ret = UFS_GetExternalReference(handle, nodeIndex, pathBuffer, bufferSize, guidBuffer, &cHandle);
 
     jclass clazz = (*env)->GetObjectClass(env, data);
 
@@ -151,8 +152,8 @@ JNIEXPORT jint JNICALL Java_io_beatmaps_kabt_UFSJNI_getExternalReference
 
 JNIEXPORT jint JNICALL Java_io_beatmaps_kabt_UFSJNI_getObjectCount
   (JNIEnv * env, jobject thisObject, jlong handle, jobject count) {
-    int cCount = 0;
-    int ret = UFS_GetObjectCount(handle, &cCount);
+    uint32_t cCount = 0;
+    uint32_t ret = UFS_GetObjectCount(handle, &cCount);
 
     updateHandleI(env, count, cCount);
 
@@ -162,7 +163,7 @@ JNIEXPORT jint JNICALL Java_io_beatmaps_kabt_UFSJNI_getObjectCount
 JNIEXPORT jint JNICALL Java_io_beatmaps_kabt_UFSJNI_getObjectInfo
   (JNIEnv * env, jobject thisObject, jlong handle, jint len, jobjectArray list) {
     struct ObjectInfo * objBuffer = malloc(len * sizeof(struct ObjectInfo));
-    int ret = UFS_GetObjectInfo(handle, objBuffer, len);
+    uint32_t ret = UFS_GetObjectInfo(handle, objBuffer, len);
 
     if (len > 0) {
         jobject jInfo = (jobject) (*env)->GetObjectArrayElement(env, list, 0);
@@ -199,8 +200,8 @@ JNIEXPORT jint JNICALL Java_io_beatmaps_kabt_UFSJNI_closeSerializedFile
 
 JNIEXPORT jint JNICALL Java_io_beatmaps_kabt_UFSJNI_getTypeTree
   (JNIEnv * env, jobject thisObject, jlong handle, jlong objectId, jobject typeTree) {
-    long long cHandle = 0;
-    int ret = UFS_GetTypeTree(handle, objectId, &cHandle);
+    uint64_t cHandle = 0;
+    uint32_t ret = UFS_GetTypeTree(handle, objectId, &cHandle);
 
     updateHandle(env, typeTree, cHandle);
 
@@ -209,10 +210,8 @@ JNIEXPORT jint JNICALL Java_io_beatmaps_kabt_UFSJNI_getTypeTree
 
 JNIEXPORT jint JNICALL Java_io_beatmaps_kabt_UFSJNI_getTypeTreeNodeInfo
   (JNIEnv * env, jobject thisObject, jlong handle, jint node, jobject data) {
-    char flags = 0;
-    int offset, size, metaFlags, firstChildNode, nextNode = 0;
-
-    int ret = UFS_GetTypeTreeNodeInfo(handle, node, buffer, bufferSize, buffer2, bufferSize, &offset, &size, &flags, &metaFlags, &firstChildNode, &nextNode);
+    uint32_t offset, size, flags, metaFlags, firstChildNode, nextNode = 0;
+    uint32_t ret = UFS_GetTypeTreeNodeInfo(handle, node, buffer, bufferSize, buffer2, bufferSize, &offset, &size, &flags, &metaFlags, &firstChildNode, &nextNode);
 
     jclass clazz = (*env)->GetObjectClass(env, data);
 
@@ -247,8 +246,8 @@ JNIEXPORT jint JNICALL Java_io_beatmaps_kabt_UFSJNI_getTypeTreeNodeInfo
 
 JNIEXPORT jint JNICALL Java_io_beatmaps_kabt_UFSJNI_seekFile
   (JNIEnv * env, jobject thisObject, jlong handle, jlong offset, jbyte origin, jobject newPosition) {
-    long long cHandle = 0;
-    int ret = UFS_SeekFile(handle, offset, origin, &cHandle);
+    uint64_t cHandle = 0;
+    uint32_t ret = UFS_SeekFile(handle, offset, origin, &cHandle);
 
     updateHandle(env, newPosition, cHandle);
 
@@ -258,8 +257,8 @@ JNIEXPORT jint JNICALL Java_io_beatmaps_kabt_UFSJNI_seekFile
 JNIEXPORT jint JNICALL Java_io_beatmaps_kabt_UFSJNI_readFile
   (JNIEnv * env, jobject thisObject, jlong handle, jlong size, jbyteArray arr, jobject actualSize) {
     jbyte* b = (*env)->GetByteArrayElements(env, arr, NULL);
-    long long cHandle = 0;
-    int ret = UFS_ReadFile(handle, size, b, &cHandle);
+    uint64_t cHandle = 0;
+    uint32_t ret = UFS_ReadFile(handle, size, (char *) b, &cHandle);
 
     (*env)->ReleaseByteArrayElements(env, arr, b, 0);
     updateHandle(env, actualSize, cHandle);
@@ -274,8 +273,8 @@ JNIEXPORT jint JNICALL Java_io_beatmaps_kabt_UFSJNI_unmountArchive
 
 JNIEXPORT jint JNICALL Java_io_beatmaps_kabt_UFSJNI_getRefTypeTypeTree
   (JNIEnv * env, jobject thisObject, jlong handle, jstring className, jstring namespaceName, jstring assemblyName, jobject typeTree) {
-    long long cHandle = 0;
-    int ret = UFS_GetRefTypeTypeTree(
+    uint64_t cHandle = 0;
+    uint32_t ret = UFS_GetRefTypeTypeTree(
         handle,
         (*env)->GetStringUTFChars(env, className, 0),
         (*env)->GetStringUTFChars(env, namespaceName, 0),
