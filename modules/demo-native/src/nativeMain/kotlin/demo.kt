@@ -4,14 +4,8 @@ import io.beatmaps.kabt.flags.ArchiveNodeFlags
 import io.beatmaps.kabt.tree.ComplexAsset
 import io.beatmaps.kabt.tree.MapAsset
 import io.beatmaps.kabt.tree.StringAsset
-import kotlinx.cinterop.addressOf
-import kotlinx.cinterop.toKString
-import kotlinx.cinterop.usePinned
-import platform.posix.getcwd
 
-fun getCwd(): String? {
-    return ByteArray(1024).usePinned { getcwd(it.addressOf(0), 1024) }?.toKString()
-}
+expect fun getCwd(): String?
 
 fun main() {
     try {

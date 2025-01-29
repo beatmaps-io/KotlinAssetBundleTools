@@ -13,12 +13,20 @@ kotlin {
         }
     }
 
-    sourceSets {
-        mingwX64Main {
-            languageSettings.optIn("kotlinx.cinterop.ExperimentalForeignApi")
+    macosX64 {
+        binaries {
+            executable {
+                linkerOpts += "${rootProject.projectDir}/modules/kabt-jni/ufs/libUnityFileSystemApi.dylib"
+            }
         }
+    }
+
+    sourceSets.all {
+        languageSettings.optIn("kotlinx.cinterop.ExperimentalForeignApi")
+    }
+
+    sourceSets {
         nativeMain {
-            languageSettings.optIn("kotlinx.cinterop.ExperimentalForeignApi")
             dependencies {
                 implementation(kotlin("stdlib"))
                 implementation(project(":kabt-base"))
@@ -30,31 +38,21 @@ kotlin {
 
 
 tasks {
-    val copyDebug = register("copyUFSDebug", Copy::class) {
-        group = "package"
-        description = "Copies the resources into exe directory"
+    setOf("mingwX64", "macosX64").forEach { target ->
+        setOf("Debug", "Release").forEach { buildType ->
+            val copyTask = register("copyUFS$target$buildType", Copy::class) {
+                group = "package"
+                description = "Copies the resources into exe directory"
 
-        from("${rootProject.projectDir}/modules/kabt-jni/ufs") {
-            include("**/*")
+                from("${rootProject.projectDir}/modules/kabt-jni/ufs") {
+                    include("**/*")
+                }
+
+                into(layout.buildDirectory.file("bin/$target/debugExecutable"))
+            }
+            getByName("run${buildType}Executable${target.replaceFirstChar { it.uppercaseChar() }}") {
+                dependsOn(copyTask)
+            }
         }
-
-        into(layout.buildDirectory.file("bin/mingwX64/debugExecutable"))
-    }
-    val runDebugExecutableMingwX64 by getting {
-        dependsOn(copyDebug)
-    }
-
-    val copyRelease = register("copyUFSRelease", Copy::class) {
-        group = "package"
-        description = "Copies the resources into exe directory"
-
-        from("${rootProject.projectDir}/modules/kabt-jni/ufs") {
-            include("**/*")
-        }
-
-        into(layout.buildDirectory.file("bin/mingwX64/releaseExecutable"))
-    }
-    val runReleaseExecutableMingwX64 by getting {
-        dependsOn(copyRelease)
     }
 }
