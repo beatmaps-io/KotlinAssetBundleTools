@@ -45,6 +45,17 @@ kotlin {
         }
     }
 
+    macosX64 {
+        val main by compilations.getting
+
+        main.cinterops {
+            val unityFileSystemApi by creating {
+                defFile("src/nativeMain/cinterop/UnityFileSystemApi.def")
+                packageName("io.beatmaps.kabt.unity")
+            }
+        }
+    }
+
     sourceSets.configureEach {
         languageSettings {
             optIn("kotlinx.cinterop.ExperimentalForeignApi")

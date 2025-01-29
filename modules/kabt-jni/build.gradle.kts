@@ -29,7 +29,8 @@ library {
     targetMachines.set(
         listOf(
             machines.linux.x86_64,
-            machines.windows.x86_64
+            machines.windows.x86_64,
+            machines.macOS.x86_64
         )
     )
 
@@ -44,7 +45,7 @@ library {
             } else if (osFamily.isLinux && osName.contains("linux")) {
                 nativeImplementation(files("ufs/libUnityFileSystemApi.so"))
             } else {
-                nativeImplementation(files("ufs/UnityFileSystemApi.dylib"))
+                nativeImplementation(files("ufs/libUnityFileSystemApi.dylib"))
             }
 
         }

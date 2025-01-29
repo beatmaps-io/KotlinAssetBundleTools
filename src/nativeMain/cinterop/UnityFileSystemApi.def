@@ -1,5 +1,5 @@
 compilerOpts = -Imodules/kabt-jni/src/main/headers
-staticLibraries.mingw = UnityFileSystemApi.lib
+staticLibraries = UnityFileSystemApi.lib
 libraryPaths = modules/kabt-jni/ufs
 ---
 

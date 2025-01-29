@@ -14,23 +14,10 @@ kotlin {
     jvm()
     mingwX64()
     linuxX64()
+    macosX64()
 
-    sourceSets {
-        commonMain.languageSettings {
-            optIn("kotlin.ExperimentalUnsignedTypes")
-        }
-        jvmMain.languageSettings {
-            optIn("kotlin.ExperimentalUnsignedTypes")
-        }
-        nativeMain.languageSettings {
-            optIn("kotlin.ExperimentalUnsignedTypes")
-        }
-        linuxX64Main.languageSettings {
-            optIn("kotlin.ExperimentalUnsignedTypes")
-        }
-        mingwX64Main.languageSettings {
-            optIn("kotlin.ExperimentalUnsignedTypes")
-        }
+    sourceSets.all {
+        languageSettings.optIn("kotlin.ExperimentalUnsignedTypes")
     }
 }
 
