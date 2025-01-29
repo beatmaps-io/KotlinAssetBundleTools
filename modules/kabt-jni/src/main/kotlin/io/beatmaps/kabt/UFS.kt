@@ -41,7 +41,7 @@ class UFSJNI {
             try {
                 System.loadLibrary(name)
             } catch (linkError: UnsatisfiedLinkError) {
-                val file = System.mapLibraryName(name)
+                val file = System.mapLibraryName(name).removePrefix("lib")
                 val dest = File(path, file)
 
                 UFSJNI::class.java.classLoader.getResource("kabt/$osSlug/$file")?.let { resource ->

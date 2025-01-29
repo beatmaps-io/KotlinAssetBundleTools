@@ -43,9 +43,9 @@ library {
                 nativeLinkOnly(files("ufs/UnityFileSystemApi.lib"))
                 nativeRuntimeOnly(files("ufs/UnityFileSystemApi.dll"))
             } else if (osFamily.isLinux && osName.contains("linux")) {
-                nativeImplementation(files("ufs/libUnityFileSystemApi.so"))
+                nativeImplementation(files("ufs/UnityFileSystemApi.so"))
             } else {
-                nativeImplementation(files("ufs/libUnityFileSystemApi.dylib"))
+                nativeImplementation(files("ufs/UnityFileSystemApi.dylib"))
             }
 
         }

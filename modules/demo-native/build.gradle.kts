@@ -16,7 +16,7 @@ kotlin {
     linuxX64 {
         binaries {
             executable {
-                linkerOpts += "${project(":kabt-jni").projectDir}/ufs/libUnityFileSystemApi.so"
+                linkerOpts += "${project(":kabt-jni").projectDir}/ufs/UnityFileSystemApi.so"
             }
         }
     }
@@ -24,7 +24,7 @@ kotlin {
     macosX64 {
         binaries {
             executable {
-                linkerOpts += "${project(":kabt-jni").projectDir}/ufs/libUnityFileSystemApi.dylib"
+                linkerOpts += "${project(":kabt-jni").projectDir}/ufs/UnityFileSystemApi.dylib"
             }
         }
     }
@@ -48,17 +48,21 @@ kotlin {
 tasks {
     setOf("mingwX64", "macosX64", "linuxX64").forEach { target ->
         setOf("Debug", "Release").forEach { buildType ->
+            val targetPath = layout.buildDirectory.file("bin/$target/${buildType.lowercase()}Executable")
+            val sourcePath = "${project(":kabt-jni").projectDir}/ufs"
             val copyTask = register("copyUFS$target$buildType", Copy::class) {
                 group = "package"
                 description = "Copies the resources into exe directory"
 
-                from("${rootProject.projectDir}/modules/kabt-jni/ufs") {
-                    include("**/*")
+                from(sourcePath) {
+                    include("**/*.dll")
                 }
 
-                into(layout.buildDirectory.file("bin/$target/debugExecutable"))
+                into(targetPath)
             }
-            getByName("run${buildType}Executable${target.replaceFirstChar { it.uppercaseChar() }}") {
+            getByName<Exec>("run${buildType}Executable${target.replaceFirstChar { it.uppercaseChar() }}") {
+                environment("LD_LIBRARY_PATH", sourcePath)
+                environment("DYLD_LIBRARY_PATH", sourcePath)
                 dependsOn(copyTask)
             }
         }
