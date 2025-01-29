@@ -37,11 +37,11 @@ class UFSJNI {
             setOf("winsows", "macos").firstOrNull { osName.contains(it) } ?: "linux"
         }
 
-        private fun extractLibrary(name: String) {
+        private fun extractLibrary(name: String, stripLib: Boolean = false) {
             try {
                 System.loadLibrary(name)
             } catch (linkError: UnsatisfiedLinkError) {
-                val file = System.mapLibraryName(name).removePrefix("lib")
+                val file = System.mapLibraryName(name).let { if (stripLib) it.removePrefix("lib") else it }
                 val dest = File(path, file)
 
                 UFSJNI::class.java.classLoader.getResource("kabt/$osSlug/$file")?.let { resource ->
@@ -65,7 +65,7 @@ class UFSJNI {
         }
 
         init {
-            extractLibrary("UnityFileSystemApi")
+            extractLibrary("UnityFileSystemApi", true)
             extractLibrary("kabt-jni")
         }
     }
