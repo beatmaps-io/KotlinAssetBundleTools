@@ -2,7 +2,10 @@ package io.beatmaps.kabt.external
 
 import io.beatmaps.kabt.Handle
 import io.beatmaps.kabt.SeekOrigin
+import io.beatmaps.kabt.base.IArchiveNodeData
+import io.beatmaps.kabt.base.IExternalReferenceData
 import io.beatmaps.kabt.base.IObject
+import io.beatmaps.kabt.base.ITypeTreeNodeInfoData
 import io.beatmaps.kabt.exception.InvalidOperationException
 import io.beatmaps.kabt.unity.ObjectInfo
 import io.beatmaps.kabt.unity.UFS_Cleanup
@@ -76,7 +79,7 @@ actual object UFS {
         return long1.value.toLong()
     }
 
-    actual fun getArchiveNode(handle: Handle, nodeIndex: Int): ArchiveNodeData {
+    actual fun getArchiveNode(handle: Handle, nodeIndex: Int): IArchiveNodeData {
         UFSError.handle(
             UFS_GetArchiveNode(handle.uLong, nodeIndex.toUInt(), buffer1, BUFFER_1_SIZE, int1.ptr, int2.ptr)
         )
@@ -141,7 +144,7 @@ actual object UFS {
         return int1.value.toInt()
     }
 
-    actual fun getExternalReference(handle: Handle, index: Int): ExternalReferenceData {
+    actual fun getExternalReference(handle: Handle, index: Int): IExternalReferenceData {
         UFSError.handle(
             UFS_GetExternalReference(handle.uLong, index.toUInt(), buffer1, BUFFER_1_SIZE, buffer2, int1.ptr)
         )
@@ -185,7 +188,7 @@ actual object UFS {
         return Handle(long1.value)
     }
 
-    actual fun getTypeTreeNodeInfo(handle: Handle, node: Int): TypeTreeNodeInfoData {
+    actual fun getTypeTreeNodeInfo(handle: Handle, node: Int): ITypeTreeNodeInfoData {
         UFSError.handle(
             UFS_GetTypeTreeNodeInfo(handle.uLong, node.toUInt(), buffer1, BUFFER_1_SIZE, buffer2, BUFFER_2_SIZE, int1.ptr, int2.ptr, byte1.ptr, int3.ptr, int4.ptr, int5.ptr)
         )

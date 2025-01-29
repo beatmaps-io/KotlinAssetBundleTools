@@ -44,9 +44,19 @@ class UFSJNI {
                 val file = System.mapLibraryName(name)
                 val dest = File(path, file)
 
-                if (!dest.exists()) {
-                    UFSJNI::class.java.classLoader.getResourceAsStream("kabt/$osSlug/$file")?.use { source ->
-                        Files.copy(source, dest.toPath())
+                UFSJNI::class.java.classLoader.getResource("kabt/$osSlug/$file")?.let { resource ->
+                    if (dest.exists()) {
+                        val lastModified = File(resource.path.substring(5, resource.path.indexOf('!'))).lastModified()
+                        val destModified = dest.lastModified()
+                        if (lastModified > destModified) {
+                            dest.delete()
+                        }
+                    }
+
+                    if (!dest.exists()) {
+                        resource.openStream().use { source ->
+                            Files.copy(source, dest.toPath())
+                        }
                     }
                 }
 

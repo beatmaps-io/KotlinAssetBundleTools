@@ -5,7 +5,10 @@ import io.beatmaps.kabt.JNIHandleI
 import io.beatmaps.kabt.JNIHandleL
 import io.beatmaps.kabt.SeekOrigin
 import io.beatmaps.kabt.UFSJNI
+import io.beatmaps.kabt.base.IArchiveNodeData
+import io.beatmaps.kabt.base.IExternalReferenceData
 import io.beatmaps.kabt.base.IObject
+import io.beatmaps.kabt.base.ITypeTreeNodeInfoData
 
 actual object UFS {
     private val jni = UFSJNI()
@@ -32,7 +35,7 @@ actual object UFS {
         return long1.value
     }
 
-    actual fun getArchiveNode(handle: Handle, nodeIndex: Int) =
+    actual fun getArchiveNode(handle: Handle, nodeIndex: Int): IArchiveNodeData =
         ArchiveNodeData().also { data ->
             UFSError.handle(jni.getArchiveNode(handle.long, nodeIndex, data))
         }
@@ -94,7 +97,7 @@ actual object UFS {
         return int1.value
     }
 
-    actual fun getExternalReference(handle: Handle, index: Int) =
+    actual fun getExternalReference(handle: Handle, index: Int): IExternalReferenceData =
         ExternalReferenceData().also { data ->
             UFSError.handle(jni.getExternalReference(handle.long, index, data))
         }
@@ -130,7 +133,7 @@ actual object UFS {
         return Handle(long1.value)
     }
 
-    actual fun getTypeTreeNodeInfo(handle: Handle, node: Int) =
+    actual fun getTypeTreeNodeInfo(handle: Handle, node: Int): ITypeTreeNodeInfoData =
         TypeTreeNodeInfoData().also {
             UFSError.handle(
                 jni.getTypeTreeNodeInfo(handle.long, node, it)
