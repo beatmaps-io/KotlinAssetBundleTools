@@ -34,7 +34,7 @@ class UFSJNI {
         private val path = System.getProperty("java.io.tmpdir")
 
         private val osSlug = System.getProperty("os.name").lowercase().replace(" ", "").let { osName ->
-            setOf("winsows", "macos").firstOrNull { osName.contains(it) } ?: "linux"
+            setOf("windows", "macos").firstOrNull { osName.contains(it) } ?: "linux"
         }
 
         private fun extractLibrary(name: String, stripLib: Boolean = false) {
