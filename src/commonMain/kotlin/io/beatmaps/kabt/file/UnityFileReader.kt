@@ -63,7 +63,7 @@ class UnityFileReader(private val ufs: UnityFileSystem, private val path: String
 
     override fun readArray(fileOffset: Long, size: Int, out: UByteArray) {
         val offset = readBytes(fileOffset, size)
-        buffer.copyInto(out, 0, offset, size)
+        buffer.sliceArray(offset..(offset + size)).copyInto(out, 0, 0, size)
     }
 
     override fun readArray(type: ExternalType, fileOffset: Long, size: Int): List<Any> {
@@ -90,15 +90,14 @@ class UnityFileReader(private val ufs: UnityFileSystem, private val path: String
 
     fun crc32(previous: UInt): UInt
     {
-        val fileOffset = 0L
         val readSize = if (length > bufferSize) bufferSize else length.toInt()
-        var readBytes = 0
+        var readBytes = 0L
         var crc32 = previous
 
         while (readBytes < length)
         {
-            val offset2 = readBytes(fileOffset, readSize)
-            val end = offset2 + readSize
+            val offset2 = readBytes(readBytes, readSize)
+            val end = offset2 + if (length - readBytes < readSize) (length - readBytes).toInt() else readSize
             crc32 = CRC32.calculateCRC32(buffer.sliceArray(offset2..<end), crc32)
             readBytes += readSize
         }
